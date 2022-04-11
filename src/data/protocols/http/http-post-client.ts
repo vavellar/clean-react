@@ -1,6 +1,6 @@
 export type HttpPostParams = {
   url: string
-  body? : object
+  body?: object
 }
 
 export interface HttpPostClient {
