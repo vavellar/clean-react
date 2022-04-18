@@ -1,7 +1,7 @@
 {
-    "setting": {
+    "settings": {
         "react": {
-            "verrsion": "detect"
+            "version": "detect"
         }
     },
     "extends": [
