@@ -35,10 +35,16 @@ module.exports = {
         }]
     },
     devServer: {
-        contentBase: './public',
-        writeToDisk: true,
-        historyApiFallback: true
-    },
+        static: {
+            directory: path.resolve(__dirname, 'public'),
+        },
+        devMiddleware: {
+            index: true,
+            mimeTypes: { "text/html": ["phtml"] },
+            serverSideRender: true,
+            writeToDisk: true,
+        },
+     },
     externals: {
         react: 'React',
         'react-dom': 'ReactDOM'
