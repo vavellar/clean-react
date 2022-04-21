@@ -15,7 +15,8 @@ const Input: React.FC<InputProps> = ({
   placeHolder,
   testID
 }) => {
-  const { emailError, passwordError} = useContext(FormContext)
+  const { state, setState } = useContext(FormContext)
+  const { emailError, passwordError } = state
 
   const selectCorrectTextError = (): string => {
     const options = {
@@ -37,9 +38,18 @@ const Input: React.FC<InputProps> = ({
     event.target.readOnly = false
   }
 
+  const handleChange = (event: React.FocusEvent<HTMLInputElement>): void => {
+    setState({
+      ...state,
+      [event.target.name]: event.target.value
+    })
+  }
+
   return (
     <div className={Styles.inputWrap}>
       <input
+        onChange={handleChange}
+        data-testid={inputName}
         readOnly
         onFocus={enableInput}
         type={inputType}
