@@ -27,11 +27,11 @@ const Input: React.FC<InputProps> = ({
   }
 
   const getStatus = (): string => {
-    return '🔴'
+    return emailError || passwordError ? '🔴' : '🟢'
   }
 
   const getTitle = (): string => {
-    return selectCorrectTextError()
+    return emailError || passwordError ? selectCorrectTextError() : 'Tudo certo'
   }
 
   const enableInput = (event: React.FocusEvent<HTMLInputElement>): void => {
