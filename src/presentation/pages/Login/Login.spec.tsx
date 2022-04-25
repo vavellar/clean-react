@@ -1,9 +1,8 @@
 import React from 'react'
 import { render, RenderResult, fireEvent,  } from '@testing-library/react'
 import Login from './Login'
-import { ValidationStub } from '@/presentation/test'
+import { ValidationStub, AuthenticationSpy } from '@/presentation/test'
 import faker from 'faker'
-import { AuthenticationSpy } from '@/presentation/test/mock-authentcation'
 
 type SutTypes = {
   sut: RenderResult
