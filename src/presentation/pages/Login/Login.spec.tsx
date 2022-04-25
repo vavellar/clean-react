@@ -58,8 +58,6 @@ const simulateStatusForField = (sut: RenderResult, fieldName: string, validation
   expect(field.textContent).toBe(validationError ? '🔴' : '🟢')
 }
 
-
-
 describe('Login component', () => {
 
     it('Should start with inital state', () => {
@@ -72,7 +70,6 @@ describe('Login component', () => {
         simulateStatusForField(sut, 'email', validationError)
         simulateStatusForField(sut, 'password', validationError)
     })
-
 
     it('Should show email error if Validation fails', () => {
         const validationError = faker.random.words()
@@ -124,5 +121,12 @@ describe('Login component', () => {
         email,
         password
        })
+     })
+
+     it('Should call Authentication only once', () => {
+       const { sut, authenticationSpy } = makeSut()
+       simulateValidSubmit(sut)
+       simulateValidSubmit(sut)
+       expect(authenticationSpy.callsCount).toBe(1)
      })
 })
