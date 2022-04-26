@@ -58,7 +58,7 @@ const populatePasswordField = (sut: RenderResult, password = faker.internet.pass
   })
 }
 
-const simulateStatusForField = (sut: RenderResult, fieldName: string, validationError?: string): void => {
+const testStatusForField = (sut: RenderResult, fieldName: string, validationError?: string): void => {
   const field = sut.getByTestId(`${fieldName}-status`)
   expect(field.title).toBe(validationError || 'Tudo certo')
   expect(field.textContent).toBe(validationError ? '🔴' : '🟢')
@@ -75,34 +75,34 @@ describe('Login component', () => {
     expect(errorWrap.childElementCount).toBe(0)
     const submitButton = sut.getByTestId('submit') as HTMLButtonElement
     expect(submitButton.disabled).toBe(true)
-    simulateStatusForField(sut, 'email', validationError)
-    simulateStatusForField(sut, 'password', validationError)
+    testStatusForField(sut, 'email', validationError)
+    testStatusForField(sut, 'password', validationError)
   })
 
   it('Should show email error if Validation fails', () => {
     const validationError = faker.random.words()
     const { sut } = makeSut({ validationError })
     populateEmailField(sut)
-    simulateStatusForField(sut, 'email', validationError)
+    testStatusForField(sut, 'email', validationError)
   })
 
   it('Should show password error if Validation fails', () => {
     const validationError = faker.random.words()
     const { sut } = makeSut({ validationError })
     populatePasswordField(sut)
-    simulateStatusForField(sut, 'password', validationError)
+    testStatusForField(sut, 'password', validationError)
   })
 
   it('Should show valid password state if Validation succeeds', () => {
     const { sut } = makeSut()
     populatePasswordField(sut)
-    simulateStatusForField(sut, 'password')
+    testStatusForField(sut, 'password')
   })
 
   it('Should show valid email state if Validation succeeds', () => {
     const { sut } = makeSut()
     populateEmailField(sut)
-    simulateStatusForField(sut, 'email')
+    testStatusForField(sut, 'email')
   })
 
   it('Should the submit button be able if form is valid', () => {
