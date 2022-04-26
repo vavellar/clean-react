@@ -1,7 +1,7 @@
 import React from 'react'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import { render, RenderResult, fireEvent  } from '@testing-library/react'
+import { render, RenderResult, fireEvent, waitFor  } from '@testing-library/react'
 import Login from './Login'
 import { ValidationStub, AuthenticationSpy } from '@/presentation/test'
 import faker from 'faker'
@@ -17,7 +17,7 @@ type SutParams = {
     validationError: string
 }
 
-const history = createMemoryHistory()
+const history = createMemoryHistory({ initialEntries: ['/login']})
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
   const authenticationSpy = new AuthenticationSpy()
@@ -158,15 +158,16 @@ describe('Login component', () => {
   //    expect(errorWrap.childElementCount).toBe(1)
   //  })
 
-  //  it('Should add accessToken to localStorage on success', async () => {
-  //    const { sut, authenticationSpy } = makeSut()
-  //    simulateValidSubmit(sut)
-  //    await waitFor(() => sut.getByTestId('form'))
-  //    expect(localStorage.setItem).toHaveBeenCalledWith(
-  //      'accessToken',
-  //      authenticationSpy.account.accessToken
-  //     )
-  //  })
+   it('Should add accessToken to localStorage on success and navigate to main page', async () => {
+     const { sut, authenticationSpy } = makeSut()
+     simulateValidSubmit(sut)
+     await waitFor(() => sut.getByTestId('form'))
+    //  expect(localStorage.setItem).toHaveBeenCalledWith(
+    //    'accessToken',
+    //    authenticationSpy.account.accessToken
+    //   )
+      expect(history.location.pathname).toBe('/')
+   })
 
    it('Should go to signup page', async () => {
      const { sut } = makeSut()
