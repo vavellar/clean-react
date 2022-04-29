@@ -1,36 +1,42 @@
 import { FieldValidation } from "@/validation/protocols/field-validation"
 import { FieldValidationSpy } from "../test/mock-field-validation"
 import { ValidationComposite } from "./validation-composite"
+import faker from 'faker'
 
-const generateFieldValidation = () => {
-    const fieldValidationSpy = new FieldValidationSpy('any_field')
-    const fieldValidationSpy2 = new FieldValidationSpy('any_field')
-    return { 
-        fieldValidationSpy, 
-        fieldValidationSpy2
-    }
+type SutTypes = {
+    sut: ValidationComposite
+    fieldValidationsSpy: FieldValidationSpy[]
 }
 
-const makeSut = (validators: FieldValidation[]) => new ValidationComposite(validators)
+const makeSut = (): SutTypes => {
+  const fieldValidationsSpy = [
+    new FieldValidationSpy('any_field'),
+    new FieldValidationSpy('any_field')
+  ]
+  const sut = new ValidationComposite(fieldValidationsSpy)
+  return {
+    sut,
+    fieldValidationsSpy
+  }
+}
 
 describe('ValidationComposite', () => {
     test('Should return error if any validation fails', () => {
-        const { fieldValidationSpy, fieldValidationSpy2 } =
-          generateFieldValidation()
-        fieldValidationSpy2.error = new Error('any_message')
-        const sut = makeSut([fieldValidationSpy, fieldValidationSpy2])
+        const { sut, fieldValidationsSpy } = makeSut()
+        const errorMessage = faker.random.words()
+        fieldValidationsSpy[0].error = new Error(errorMessage)
         const error = sut.validate('any_field', 'any_value')
-        expect(error).toBe('any_message')
+        expect(error).toBe(errorMessage)
     })
 
     test('Should return the first error', () => {
-      const { fieldValidationSpy, fieldValidationSpy2 } =
-        generateFieldValidation()
-      fieldValidationSpy.error = new Error('first_error_message')
-      fieldValidationSpy2.error = new Error('second_error_message')
-      const sut = makeSut([fieldValidationSpy, fieldValidationSpy2])
+      const { sut, fieldValidationsSpy } = makeSut()
+
+      const errorMessage1 = faker.random.words() 
+      fieldValidationsSpy[0].error = new Error(errorMessage1)
+      fieldValidationsSpy[1].error = new Error(faker.random.words())
 
       const error = sut.validate('any_field', 'any_value')
-      expect(error).toBe('first_error_message')
+      expect(error).toBe(errorMessage1)
     })
 })
