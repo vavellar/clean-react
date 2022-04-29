@@ -7,4 +7,10 @@ describe('MinLengthValidation', () => {
         const error = sut.validate('123')
         expect(error).toEqual(new MinLegthValidationError())
     });
+
+    test('Should return falsy if length is bigger than 5', () => {
+      const sut = new MinLegthValidation('email', 5)
+      const error = sut.validate('12345')
+      expect(error).toBeFalsy()
+    })
 });
