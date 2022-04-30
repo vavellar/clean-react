@@ -35,18 +35,17 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
       localStorage.setItem('accessToken', account.accessToken)
       navigate('/')
     } catch(error){
+      console.log(error.message)
       setState({...state, isLoading: false, errorMessage: error.message})
     }
   }
 
   useEffect(() => {
-    if (validation) {
-      setState({
-        ...state,
-        emailError: validation.validate('email', state.email),
-        passwordError: validation.validate('password', state.password)
-      })
-    }
+    setState({
+      ...state,
+      emailError: validation.validate('email', state.email),
+      passwordError: validation.validate('password', state.password)
+    })
   }, [state.email, state.password])
 
   return (
