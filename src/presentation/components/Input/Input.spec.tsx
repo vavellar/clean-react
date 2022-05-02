@@ -2,13 +2,14 @@ import React from 'react'
 import { fireEvent, render, RenderResult } from '@testing-library/react'
 import Input from './Input'
 import FormContext from '@/presentation/contexts/form/FormContext'
+import faker from 'faker'
 
-const makeSut = (): RenderResult => {
+const makeSut = (fieldName: string): RenderResult => {
     const props = {
-        inputType: 'password',
-        inputName: 'field',
-        placeHolder: 'Digite sua senha',
-        testID: 'password'
+      inputType: 'fieldName',
+      inputName: fieldName,
+      placeHolder: 'Digite sua senha',
+      testID: 'password'
     }
     return render(
       <FormContext.Provider value={{ state: {}}}>
@@ -19,14 +20,16 @@ const makeSut = (): RenderResult => {
 
 describe('Input - Component', () => {
     test('Should begin with readonly', () => {
-        const sut = makeSut()
-        const input = sut.getByTestId('field') as HTMLInputElement
+        const field = faker.database.column()
+        const sut = makeSut(field)
+        const input = sut.getByTestId(field) as HTMLInputElement
         expect(input.readOnly).toBe(true)
     });
 
     test('Should not be readOnly if element is focused', () => {
-      const sut = makeSut()
-      const input = sut.getByTestId('field') as HTMLInputElement
+      const field = faker.database.column()
+      const sut = makeSut(field)
+      const input = sut.getByTestId(field) as HTMLInputElement
       fireEvent.focus(input)
       expect(input.readOnly).toBe(false)
     })
