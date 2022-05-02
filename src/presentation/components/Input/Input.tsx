@@ -26,8 +26,15 @@ const Input: React.FC<InputProps> = ({
     return options[inputName]
   }
 
+
   const getStatus = (): string => {
-    return emailError || passwordError ? '🔴' : '🟢'
+    return inputName === 'email'
+      ? emailError
+        ? '🔴'
+        : '🟢'
+      : passwordError
+      ? '🔴'
+      : '🟢'
   }
 
   const getTitle = (): string => {
