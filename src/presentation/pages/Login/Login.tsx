@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Styles from './Login-styles.scss'
 import { LoginHeader, Footer, Input, FormStatus } from '@/presentation/components'
-import FormContext from '@/presentation/contexts/form/formContext'
+import FormContext from '@/presentation/contexts/form/FormContext'
 import { Validation } from '@/presentation/protocols/validation'
 import { Authentication } from '@/domain/usecases'
 import { Link, useNavigate } from 'react-router-dom'

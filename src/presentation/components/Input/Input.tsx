@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import Styles from './Input-styles.scss'
-import FormContext from '@/presentation/contexts/form/formContext'
+import FormContext from '@/presentation/contexts/form/FormContext'
 
 type InputProps ={
   inputType: string
