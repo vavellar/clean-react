@@ -1,9 +1,9 @@
 import React from 'react'
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, render, RenderResult } from '@testing-library/react'
 import Input from './Input'
 import FormContext from '@/presentation/contexts/form/FormContext'
 
-const makeSut = () => {
+const makeSut = (): RenderResult => {
     const props = {
         inputType: 'password',
         inputName: 'field',
@@ -19,12 +19,14 @@ const makeSut = () => {
 
 describe('Input - Component', () => {
     test('Should begin with readonly', () => {
-        const input = makeSut().getByTestId('field') as HTMLInputElement
+        const sut = makeSut()
+        const input = sut.getByTestId('field') as HTMLInputElement
         expect(input.readOnly).toBe(true)
     });
 
     test('Should not be readOnly if element is focused', () => {
-      const input = makeSut().getByTestId('field') as HTMLInputElement
+      const sut = makeSut()
+      const input = sut.getByTestId('field') as HTMLInputElement
       fireEvent.focus(input)
       expect(input.readOnly).toBe(false)
     })
