@@ -6,7 +6,7 @@ type InputProps ={
   inputType: string
   inputName: string
   placeHolder: string
-  testID: string
+  testID?: string
 }
 
 const Input: React.FC<InputProps> = ({
