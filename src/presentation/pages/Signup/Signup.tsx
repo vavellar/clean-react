@@ -9,12 +9,14 @@ import {
 import FormContext from '@/presentation/contexts/form/FormContext'
 import { Link } from 'react-router-dom'
 import { Validation } from '@/presentation/protocols/validation'
+import { AddAccount } from '@/domain/usecases'
 
 type Props = {
   validation?: Validation
+  addAccount: AddAccount
 }
 
-const Signup: React.FC<Props> = ({ validation}: Props) => {
+const Signup: React.FC<Props> = ({ validation, addAccount}: Props) => {
   const [state, setState] = useState({
     isLoading: false,
     name: '',
@@ -38,9 +40,15 @@ const Signup: React.FC<Props> = ({ validation}: Props) => {
     })
   }, [state.name, state.email, state.password, state.passwordConfirmation])
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setState({...state, isLoading: true})
+    await addAccount.add({
+      name: state.name,
+      email: state.email,
+      password: state.password,
+      passwordConfirmation: state.passwordConfirmation
+    })
   }
 
   const { emailError, nameError, passwordConfirmationError, passwordError } = state
