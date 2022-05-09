@@ -3,13 +3,13 @@ import { fireEvent, render, RenderResult } from "@testing-library/react"
 import Signup from "./Signup"
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import { Helper, ValidationStub } from '@/presentation/test'
+import { Helper, ValidationStub, AddAccountSpy } from '@/presentation/test'
 import faker from 'faker'
-import { ValidationComposite } from '@/validation/validators'
 
 
 type SutTypes = {
   sut: RenderResult
+  addAccountSpy: AddAccountSpy
 }
 
 type SutParams = {
@@ -21,26 +21,28 @@ const history = createMemoryHistory({ initialEntries: ['/login']})
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
   validationStub.errorMessage = params?.validationError
+  const addAccountSpy = new AddAccountSpy()
   const sut = render(
     <Router location={history.location} navigator={history}>
-      <Signup validation={validationStub} />
+      <Signup validation={validationStub} addAccount={addAccountSpy}/>
     </Router>
   )
   return {
     sut,
+    addAccountSpy
   }
 }
 
 const simulateValidSubmit = (
   sut: RenderResult,
-  email = faker.internet.email(),
   name = faker.name.findName(),
+  email = faker.internet.email(),
   password = faker.internet.password()
 ): void => {
   Helper.populateField(sut, 'name', name)
   Helper.populateField(sut, 'email', email)
   Helper.populateField(sut, 'password', password)
-  Helper.populateField(sut, 'password', password)
+  Helper.populateField(sut, 'passwordConfirmation', password)
   const submitButton = sut.getByTestId('submit') as HTMLButtonElement
   fireEvent.click(submitButton)
 }
@@ -122,5 +124,19 @@ describe('SignUp component', () => {
      const { sut } = makeSut()
      simulateValidSubmit(sut)
      Helper.testElementExists(sut, 'spinner')
+   })
+
+   it('Should call AddAccount with correct values', () => {
+     const { sut, addAccountSpy } = makeSut()
+     const name = faker.name.findName()
+     const email = faker.internet.email()
+     const password = faker.internet.password()
+     simulateValidSubmit(sut, name, email, password)
+     expect(addAccountSpy.params).toEqual({
+       name,
+       email,
+       password,
+       passwordConfirmation: password 
+     })
    })
 })
