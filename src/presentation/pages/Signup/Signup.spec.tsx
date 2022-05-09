@@ -45,10 +45,6 @@ const simulateValidSubmit = (
   fireEvent.click(submitButton)
 }
 
-const testElementExists = (sut: RenderResult, fieldName: string): void => {
-  const element = sut.getByTestId(fieldName)
-  expect(element).toBeTruthy()
-}
 describe('SignUp component', () => {
   it('Should start with inital state', () => {
     const validationError = faker.random.words()
@@ -125,6 +121,6 @@ describe('SignUp component', () => {
    it('Should show spinner on submit', () => {
      const { sut } = makeSut()
      simulateValidSubmit(sut)
-     testElementExists(sut, 'spinner')
+     Helper.testElementExists(sut, 'spinner')
    })
 })

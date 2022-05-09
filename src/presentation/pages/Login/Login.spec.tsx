@@ -98,8 +98,7 @@ describe('Login component', () => {
   it('Should show spinner on submit', () => {
     const { sut } = makeSut()
     simulateValidSubmit(sut)
-    const spinner = sut.getByTestId('spinner')
-    expect(spinner).toBeTruthy()
+    Helper.testElementExists(sut, 'spinner')
   })
 
   it('Should call Authentication with correct values', () => {
