@@ -1,3 +1,5 @@
+// TO DO -> REFACTOR THIS COMPONENT
+
 import React, { useContext } from 'react'
 import Styles from './Input-styles.scss'
 import FormContext from '@/presentation/contexts/form/FormContext'
@@ -16,12 +18,14 @@ const Input: React.FC<InputProps> = ({
   testID
 }) => {
   const { state, setState } = useContext(FormContext)
-  const { emailError, passwordError } = state
+  const { emailError, passwordError, nameError, passwordConfirmationError } = state
 
   const selectCorrectTextError = (): string => {
     const options = {
       'email': emailError,
-      'password': passwordError
+      'password': passwordError,
+      'name': nameError,
+      'passwordConfirmation': passwordConfirmationError
     }
     return options[inputName]
   }
@@ -38,7 +42,9 @@ const Input: React.FC<InputProps> = ({
   }
 
   const getTitle = (): string => {
-    return emailError || passwordError ? selectCorrectTextError() : 'Tudo certo'
+    return emailError || passwordError || nameError || passwordConfirmationError
+      ? selectCorrectTextError()
+      : 'Tudo certo'
   }
 
   const enableInput = (event: React.FocusEvent<HTMLInputElement>): void => {
