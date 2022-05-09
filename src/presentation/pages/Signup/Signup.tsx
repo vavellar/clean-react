@@ -37,6 +37,10 @@ const Signup: React.FC<Props> = ({ validation}: Props) => {
       passwordConfirmationError: validation.validate('passwordConfirmation', state.passwordConfirmation)
     })
   }, [state.name, state.email, state.password, state.passwordConfirmation])
+
+  const { emailError, nameError, passwordConfirmationError, passwordError } = state
+  const buttonIsDisabled =
+    !!emailError || !!nameError || !!passwordConfirmationError || !!passwordError
   
   return (
     <div className={Styles.signup}>
@@ -71,7 +75,7 @@ const Signup: React.FC<Props> = ({ validation}: Props) => {
           <button
             data-testid="submit"
             className={Styles.submit}
-            disabled={true}
+            disabled={buttonIsDisabled}
           >
             Criar conta
           </button>
