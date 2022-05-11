@@ -124,7 +124,7 @@ const Signup: React.FC<Props> = ({
           >
             Criar conta
           </button>
-          <Link className={Styles.link} to="/login">
+          <Link className={Styles.link} to="/login" data-testid="login-link">
             Voltar para Login
           </Link>
           <FormStatus />
