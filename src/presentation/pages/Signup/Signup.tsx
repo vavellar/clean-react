@@ -7,16 +7,22 @@ import {
   FormStatus
 } from '@/presentation/components'
 import FormContext from '@/presentation/contexts/form/FormContext'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Validation } from '@/presentation/protocols/validation'
-import { AddAccount } from '@/domain/usecases'
+import { AddAccount, SaveAccessToken } from '@/domain/usecases'
 
 type Props = {
   validation?: Validation
   addAccount: AddAccount
+  saveAccessToken: SaveAccessToken
 }
 
-const Signup: React.FC<Props> = ({ validation, addAccount}: Props) => {
+const Signup: React.FC<Props> = ({
+  validation,
+  addAccount,
+  saveAccessToken
+}: Props) => {
+  const navigate = useNavigate()
   const [state, setState] = useState({
     isLoading: false,
     name: '',
@@ -36,7 +42,10 @@ const Signup: React.FC<Props> = ({ validation, addAccount}: Props) => {
       nameError: validation.validate('name', state.name),
       emailError: validation.validate('email', state.email),
       passwordError: validation.validate('password', state.password),
-      passwordConfirmationError: validation.validate('passwordConfirmation', state.passwordConfirmation)
+      passwordConfirmationError: validation.validate(
+        'passwordConfirmation',
+        state.passwordConfirmation
+      )
     })
   }, [state.name, state.email, state.password, state.passwordConfirmation])
 
@@ -52,27 +61,37 @@ const Signup: React.FC<Props> = ({ validation, addAccount}: Props) => {
       )
         return
       setState({ ...state, isLoading: true })
-      await addAccount.add({
+      const account = await addAccount.add({
         name: state.name,
         email: state.email,
         password: state.password,
         passwordConfirmation: state.passwordConfirmation
       })
+      await saveAccessToken.save(account.accessToken)
+      navigate('/')
     } catch (error) {
-      console.log(error.message)
       setState({ ...state, isLoading: false, errorMessage: error.message })
     }
   }
 
-  const { emailError, nameError, passwordConfirmationError, passwordError } = state
+  const { emailError, nameError, passwordConfirmationError, passwordError } =
+    state
   const buttonIsDisabled =
-    !!emailError || !!nameError || !!passwordConfirmationError || !!passwordError
-  
+    !!emailError ||
+    !!nameError ||
+    !!passwordConfirmationError ||
+    !!passwordError
+
   return (
     <div className={Styles.signup}>
       <LoginHeader />
       <FormContext.Provider value={{ state, setState }}>
-        <form action="" className={Styles.form} onSubmit={handleSubmit} data-testid="form">
+        <form
+          action=""
+          className={Styles.form}
+          onSubmit={handleSubmit}
+          data-testid="form"
+        >
           <h2>Criar conta</h2>
           <Input
             inputType="text"
