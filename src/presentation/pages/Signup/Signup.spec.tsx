@@ -1,9 +1,9 @@
 import React from 'react'
-import { act, fireEvent, render, RenderResult } from "@testing-library/react"
+import { act, fireEvent, render, RenderResult, waitFor } from "@testing-library/react"
 import Signup from "./Signup"
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import { Helper, ValidationStub, AddAccountSpy } from '@/presentation/test'
+import { Helper, ValidationStub, AddAccountSpy, SaveAccessTokenMock } from '@/presentation/test'
 import faker from 'faker'
 import { EmailInUseError } from '@/domain/errors'
 
@@ -11,26 +11,29 @@ import { EmailInUseError } from '@/domain/errors'
 type SutTypes = {
   sut: RenderResult
   addAccountSpy: AddAccountSpy
+  saveAccessTokenMock: SaveAccessTokenMock
 }
 
 type SutParams = {
   validationError: string
 }
 
-const history = createMemoryHistory({ initialEntries: ['/login']})
+const history = createMemoryHistory({ initialEntries: ['/signup']})
 
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
   validationStub.errorMessage = params?.validationError
   const addAccountSpy = new AddAccountSpy()
+  const saveAccessTokenMock = new SaveAccessTokenMock()
   const sut = render(
     <Router location={history.location} navigator={history}>
-      <Signup validation={validationStub} addAccount={addAccountSpy}/>
+      <Signup validation={validationStub} addAccount={addAccountSpy} saveAccessToken={saveAccessTokenMock}/>
     </Router>
   )
   return {
     sut,
-    addAccountSpy
+    addAccountSpy,
+    saveAccessTokenMock
   }
 }
 
@@ -166,4 +169,16 @@ describe('SignUp component', () => {
   //    testElementText(sut, 'error-message', error.message)
   //    Helper.testChildCount(sut, 'error-wrap', 1)
   //  })
+
+    it('Should call SaveAccessToken on success and navigate to main page', async () => {
+      const { sut, addAccountSpy, saveAccessTokenMock } = makeSut()
+      simulateValidSubmit(sut)
+      saveAccessTokenMock.save(addAccountSpy.account.accessToken)
+      await waitFor(() => sut.getByTestId('form'))
+      expect(saveAccessTokenMock.accessToken).toBe(
+        addAccountSpy.account.accessToken
+      )
+      expect(history.location.pathname).toBe('/')
+    })
+
 })
