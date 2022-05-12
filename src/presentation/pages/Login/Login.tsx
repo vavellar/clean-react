@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Styles from './Login-styles.scss'
-import { LoginHeader, Footer, Input, FormStatus } from '@/presentation/components'
+import { LoginHeader, Footer, Input, FormStatus, SubmitButton } from '@/presentation/components'
 import FormContext from '@/presentation/contexts/form/FormContext'
 import { Validation } from '@/presentation/protocols/validation'
 import { Authentication, SaveAccessToken } from '@/domain/usecases'
@@ -21,6 +21,7 @@ const Login: React.FC<Props> = ({
   const navigate = useNavigate()
   const [state, setState] = useState({
     isLoading: false,
+    isFormInvalid: true,
     email: '',
     password: '',
     errorMessage: '',
@@ -33,7 +34,7 @@ const Login: React.FC<Props> = ({
   ): Promise<void> => {
     event.preventDefault()
     try {
-      if (state.isLoading || state.passwordError || state.emailError) return
+      if (state.isLoading || state.isFormInvalid) return
       setState({ ...state, isLoading: true })
       const account = await authentication.auth({
         email: state.email,
@@ -48,10 +49,13 @@ const Login: React.FC<Props> = ({
   }
 
   useEffect(() => {
+    const emailError = validation.validate('email', state.email)
+    const passwordError = validation.validate('password', state.password)
     setState({
       ...state,
-      emailError: validation.validate('email', state.email),
-      passwordError: validation.validate('password', state.password)
+      emailError,
+      passwordError,
+      isFormInvalid: !!emailError || !!passwordError
     })
   }, [state.email, state.password])
 
@@ -78,14 +82,7 @@ const Login: React.FC<Props> = ({
             inputName="password"
             placeHolder="Digite sua senha"
           />
-          <button
-            data-testid="submit"
-            type="submit"
-            className={Styles.submit}
-            disabled={!!state.emailError || !!state.passwordError}
-          >
-            Entrar
-          </button>
+          <SubmitButton label="Entrar" />
           <Link className={Styles.link} data-testid="signup" to="/signup">
             Criar conta
           </Link>
