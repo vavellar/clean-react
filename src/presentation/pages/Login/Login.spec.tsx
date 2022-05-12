@@ -10,7 +10,6 @@ import {
   Helper
 } from '@/presentation/test'
 import faker from 'faker'
-import { InvalidCredentialsError } from '@/domain/errors'
 
 type SutTypes = {
   sut: RenderResult

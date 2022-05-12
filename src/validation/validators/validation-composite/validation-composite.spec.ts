@@ -25,7 +25,7 @@ describe('ValidationComposite', () => {
         const { sut, fieldValidationsSpy } = makeSut(field)
         const errorMessage = faker.random.words()
         fieldValidationsSpy[0].error = new Error(errorMessage)
-        const error = sut.validate(field, 'any_value')
+        const error = sut.validate(field, {[field]: faker.random.word()})
         expect(error).toBe(errorMessage)
     })
 
@@ -38,14 +38,14 @@ describe('ValidationComposite', () => {
       fieldValidationsSpy[0].error = new Error(errorMessage1)
       fieldValidationsSpy[1].error = new Error(faker.random.words())
 
-      const error = sut.validate(field, 'any_value')
+      const error = sut.validate(field, { [field]: faker.random.word() })
       expect(error).toBe(errorMessage1)
     })
 
     test('Should not return error if has not error on any validator', () => {
       const field = faker.database.column()
       const { sut } = makeSut(field)
-      const error = sut.validate(field, faker.random.word())
+      const error = sut.validate(field, { [field]: faker.random.word() })
       expect(error).toBeFalsy()
     })
 })
