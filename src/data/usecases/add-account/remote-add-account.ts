@@ -1,5 +1,4 @@
-import { HttpStatusCode } from "@/data/protocols/http"
-import { HttpPostClientSpy } from "@/data/test"
+import { HttpPostClient, HttpStatusCode } from "@/data/protocols/http"
 import { EmailInUseError, UnexpectedError } from "@/domain/errors"
 import { AccountModel } from "@/domain/models"
 import { AddAccount, AddAccountParams } from "@/domain/usecases"
@@ -7,7 +6,7 @@ import { AddAccount, AddAccountParams } from "@/domain/usecases"
 export class RemoteAddAccount implements AddAccount {
   constructor(
     private readonly url: string,
-    private readonly httpPostClient: HttpPostClientSpy<
+    private readonly httpPostClient: HttpPostClient<
       AddAccountParams,
       AccountModel
     >
