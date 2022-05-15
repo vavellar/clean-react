@@ -20,5 +20,6 @@
   },
   "include": [
     "src"
-  ]
+  ],
+  "exclude": ["src/main/test/cypress"]
 }

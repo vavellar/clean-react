@@ -1,12 +1,10 @@
 import React from 'react'
-import { act, fireEvent, render, RenderResult, waitFor } from "@testing-library/react"
+import { fireEvent, render, RenderResult, waitFor } from "@testing-library/react"
 import Signup from "./Signup"
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { Helper, ValidationStub, AddAccountSpy, SaveAccessTokenMock } from '@/presentation/test'
 import faker from 'faker'
-import { EmailInUseError } from '@/domain/errors'
-
 
 type SutTypes = {
   sut: RenderResult
