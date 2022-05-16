@@ -59,4 +59,17 @@ describe('Login', () => {
          .getByTestId('error-message').should('contain.text', 'Credênciais inválidas')
        cy.url().should('eq', `${baseUrl}/login`) 
      })
+
+     it('Should save accessToken if valid credentials are provided', () => {
+       cy.getByTestId('email').focus().type('victor@teste.com')
+       cy.getByTestId('password').focus().type('12345')
+       cy.getByTestId('submit').click()
+       cy.getByTestId('error-wrap')
+         .getByTestId('spinner')
+         .should('exist')
+         .getByTestId('error-message')
+         .should('not.exist')
+       cy.url().should('eq', `${baseUrl}/`)
+       cy.window().then(window => assert.isOk(window.localStorage.getItem('accessToken')))
+     })
 });
