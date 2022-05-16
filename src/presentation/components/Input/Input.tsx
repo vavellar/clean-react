@@ -36,9 +36,7 @@ const Input: React.FC<InputProps> = ({
   }
 
   const getTitle = (): string => {
-    return emailError || passwordError || nameError || passwordConfirmationError
-      ? selectCorrectTextError()
-      : 'Tudo certo'
+    return state[`${inputName}Error`] ? selectCorrectTextError() : 'Tudo certo'
   }
 
   const enableInput = (event: React.FocusEvent<HTMLInputElement>): void => {
