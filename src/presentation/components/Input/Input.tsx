@@ -1,6 +1,6 @@
 // TO DO -> REFACTOR THIS COMPONENT
 
-import React, { useContext } from 'react'
+import React, { useContext, useRef } from 'react'
 import Styles from './Input-styles.scss'
 import FormContext from '@/presentation/contexts/form/FormContext'
 
@@ -18,6 +18,7 @@ const Input: React.FC<InputProps> = ({
   testID
 }) => {
   const { state, setState } = useContext(FormContext)
+  const inputRef = useRef<HTMLInputElement>()
   const { emailError, passwordError, nameError, passwordConfirmationError } = state
 
   const selectCorrectTextError = (): string => {
@@ -53,14 +54,16 @@ const Input: React.FC<InputProps> = ({
   return (
     <div className={Styles.inputWrap}>
       <input
+        ref={inputRef}
         onChange={handleChange}
         data-testid={inputName}
         readOnly
         onFocus={enableInput}
         type={inputType}
         name={inputName}
-        placeholder={placeHolder}
+        placeholder=" "
       />
+      <label onClick={() => { inputRef.current.focus() }}>{placeHolder}</label>
       <span data-testid={testID} title={getTitle()} className={Styles.status}>
         {getStatus()}
       </span>
