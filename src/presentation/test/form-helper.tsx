@@ -29,11 +29,14 @@ export const populateField = (sut: RenderResult,fieldName: string,value = faker.
 export const testStatusForField = (
   sut: RenderResult,
   fieldName: string,
-  validationError?: string
+  validationError = ''
 ): void => {
-  const field = sut.getByTestId(`${fieldName}-status`)
-  expect(field.title).toBe(validationError || 'Tudo certo')
-  expect(field.textContent).toBe(validationError ? '🔴' : '🟢')
+  const wrap = sut.getByTestId(`${fieldName}-wrap`)
+  const field = sut.getByTestId(fieldName)
+  const label = sut.getByTestId(`${fieldName}-label`)
+  expect(wrap.getAttribute('data-status')).toBe(validationError ? 'invalid' : 'valid')
+  expect(field.title).toBe(validationError)
+  expect(label.title).toBe(validationError)
 }
 
 export const testElementExists = (

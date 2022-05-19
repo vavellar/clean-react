@@ -20,6 +20,7 @@ const Input: React.FC<InputProps> = ({
   const { state, setState } = useContext(FormContext)
   const inputRef = useRef<HTMLInputElement>()
   const { emailError, passwordError, nameError, passwordConfirmationError } = state
+  const error = state[`${inputName}Error`]
 
   const selectCorrectTextError = (): string => {
     const options = {
@@ -32,13 +33,13 @@ const Input: React.FC<InputProps> = ({
   }
 
 
-  const getStatus = (): string => {
-    return state[`${inputName}Error`] ? '🔴' : '🟢'
-  }
+  // const getStatus = (): string => {
+  //   return state[`${inputName}Error`] ? '🔴' : '🟢'
+  // }
 
-  const getTitle = (): string => {
-    return state[`${inputName}Error`] ? selectCorrectTextError() : 'Tudo certo'
-  }
+  // const getTitle = (): string => {
+  //   return state[`${inputName}Error`] ? selectCorrectTextError() : 'Tudo certo'
+  // }
 
   const enableInput = (event: React.FocusEvent<HTMLInputElement>): void => {
     event.target.readOnly = false
@@ -52,21 +53,31 @@ const Input: React.FC<InputProps> = ({
   }
 
   return (
-    <div className={Styles.inputWrap}>
+    <div
+      className={Styles.inputWrap}
+      data-status={error ? 'invalid' : 'valid'}
+      data-testid={`${inputName}-wrap`}
+    >
       <input
         ref={inputRef}
         onChange={handleChange}
         data-testid={inputName}
         readOnly
+        title={error}
         onFocus={enableInput}
         type={inputType}
         name={inputName}
         placeholder=" "
       />
-      <label onClick={() => { inputRef.current.focus() }}>{placeHolder}</label>
-      <span data-testid={testID} title={getTitle()} className={Styles.status}>
-        {getStatus()}
-      </span>
+      <label
+        data-testid={`${inputName}-label`}
+        title={error}
+        onClick={() => {
+          inputRef.current.focus()
+        }}
+      >
+        {placeHolder}
+      </label>
     </div>
   )
 }
