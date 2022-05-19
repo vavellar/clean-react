@@ -84,7 +84,7 @@ describe('Login - Component', () => {
       cy.url().should('equal', `${baseUrl}/login`)
     })
 
-    it('Should save accessToken if valid credentials are provided', () => {
+    it('Should prevent multiple submits', () => {
       cy.route({
         method: 'POST',
         url: /login/,
@@ -92,12 +92,10 @@ describe('Login - Component', () => {
         response: {
           accessToken: faker.datatype.uuid()
         }
-      })
+      }).as('request')
       cy.getByTestId('email').focus().type(faker.internet.email())
       cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
-      cy.getByTestId('submit').click()
-      cy.getByTestId('error-message').should('not.exist')
-      cy.url().should('equal', `${baseUrl}/`)
-      cy.window().then(window => assert.isOk(window.localStorage.getItem('accessToken')))
+      cy.getByTestId('submit').dblclick()
+      cy.get('@request.all').should('have.length', 1)
     })
 });
