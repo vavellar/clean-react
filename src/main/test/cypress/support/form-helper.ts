@@ -1,11 +1,4 @@
-import faker from 'faker'
 const baseUrl = Cypress.config().baseUrl
-
-export const simulateValidSubmit = (): void => {
-  cy.getByTestId('email').focus().type(faker.internet.email())
-  cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
-  cy.getByTestId('submit').click()
-}
 
 export const testInputStatus = (field: string, error?: string): void => {
   const attr = `${error ? '' : 'not.'}have.attr`

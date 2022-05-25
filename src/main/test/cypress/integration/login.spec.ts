@@ -2,6 +2,16 @@ import faker from 'faker'
 import * as FormHelper from '../support/form-helper'
 import * as Http from '../support/login-mocks'
 
+const populateFields = () => {
+  cy.getByTestId('email').focus().type(faker.internet.email())
+  cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
+}
+
+const simulateValidSubmit = (): void => {
+  populateFields()
+  cy.getByTestId('submit').click()
+}
+
 describe('Login - Component', () => {
   beforeEach(() => {
     cy.visit('/login')
@@ -34,21 +44,21 @@ describe('Login - Component', () => {
 
   it('Should present invalid credentials on 401', () => {
     Http.mockInvalidCredentialsError()
-    FormHelper.simulateValidSubmit()
+    simulateValidSubmit()
     FormHelper.testErrorMessage('Credênciais inválidas')
     FormHelper.testUrl('/login')
   })
 
   it('Should present UnexpectedError on default error cases', () => {
     Http.mockUnexpectedError()
-    FormHelper.simulateValidSubmit()
+    simulateValidSubmit()
     FormHelper.testErrorMessage('Erro inesperado, tente novamente')
     FormHelper.testUrl('/login')
   })
 
   it('Should prevent save accessToken if valid credentials are provided', () => {
     Http.mockOk()
-    FormHelper.simulateValidSubmit()
+    simulateValidSubmit()
     cy.getByTestId('error-message').should('not.exist')
     cy.getByTestId('spinner').should('not.exist')
     cy.window().then((window) =>
@@ -58,8 +68,7 @@ describe('Login - Component', () => {
 
   it('Should prevent multiple submits', () => {
     Http.mockOk()
-    cy.getByTestId('email').focus().type(faker.internet.email())
-    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
+    populateFields()
     cy.getByTestId('submit').dblclick()
     FormHelper.testHttpCallsCount(1)
   })
