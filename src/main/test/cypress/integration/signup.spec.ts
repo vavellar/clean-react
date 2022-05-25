@@ -70,4 +70,15 @@ describe('Signup - Component', () => {
     FormHelper.testErrorMessage('Erro inesperado, tente novamente')
     FormHelper.testUrl('/signup')
     })
+
+    it('Should prevent save accessToken if valid credentials are provided', () => {
+      Http.mockOk()
+      simulateValidSubmit()
+      cy.getByTestId('error-message').should('not.exist')
+      cy.getByTestId('spinner').should('not.exist')
+      FormHelper.testUrl('/')
+      cy.window().then((window) =>
+        assert.isOk(window.localStorage.getItem('accessToken'))
+      )
+    })
 })
