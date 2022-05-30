@@ -1,7 +1,7 @@
 export type SurveyModel = {
     id: string
     question: string
-    ansewers: [{
+    answers: [{
         image?: string
         answer: string
     }]
