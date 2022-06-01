@@ -2,9 +2,9 @@ import { HttpPostClient, HttpPostParams, HttpResponse } from "@/data/protocols/h
 import axios, { AxiosResponse } from 'axios'
 
 // design pattern adapter, adpting two differents interfaces, our system is not axios dependent
-export class AxiosHttpClient implements HttpPostClient<any, any> {
-  async post(params: HttpPostParams<any>): Promise<HttpResponse<any>> {
-    let httpResponse: AxiosResponse<any>
+export class AxiosHttpClient implements HttpPostClient {
+  async post(params: HttpPostParams): Promise<HttpResponse> {
+    let httpResponse: AxiosResponse
     try {
       httpResponse = await axios.post(params.url, params.body)
     } catch (error) {
