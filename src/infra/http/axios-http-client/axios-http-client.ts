@@ -1,8 +1,9 @@
-import { HttpPostClient, HttpPostParams, HttpResponse } from "@/data/protocols/http"
+import { HttpGetParams, HttpPostClient, HttpPostParams, HttpResponse } from "@/data/protocols/http"
 import axios, { AxiosResponse } from 'axios'
 
 // design pattern adapter, adpting two differents interfaces, our system is not axios dependent
 export class AxiosHttpClient implements HttpPostClient {
+  
   async post(params: HttpPostParams): Promise<HttpResponse> {
     let axiosResponse: AxiosResponse
     try {
@@ -14,5 +15,9 @@ export class AxiosHttpClient implements HttpPostClient {
       statusCode: axiosResponse.status,
       body: axiosResponse.data
     }
+  }
+
+  async get(params: HttpGetParams): Promise<void> {
+    await axios.get(params.url)
   }
 }
