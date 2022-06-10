@@ -56,13 +56,13 @@ describe('Login - Component', () => {
     FormHelper.testUrl('/login')
   })
 
-  it('Should prevent save accessToken if valid credentials are provided', () => {
+  it('Should save accessToken if valid credentials are provided', () => {
     Http.mockOk()
     simulateValidSubmit()
     cy.getByTestId('error-message').should('not.exist')
     cy.getByTestId('spinner').should('not.exist')
     cy.window().then((window) =>
-      assert.isOk(window.localStorage.getItem('accessToken'))
+      assert.isOk(window.localStorage.getItem('currentAccount'))
     )
   })
 

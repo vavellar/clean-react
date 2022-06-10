@@ -10,18 +10,18 @@ import {
 import FormContext from '@/presentation/contexts/form/FormContext'
 import { Link, useNavigate } from 'react-router-dom'
 import { Validation } from '@/presentation/protocols/validation'
-import { AddAccount, SaveAccessToken } from '@/domain/usecases'
+import { AddAccount, UpdateCurrentAccount } from '@/domain/usecases'
 
 type Props = {
   validation?: Validation
   addAccount: AddAccount
-  saveAccessToken: SaveAccessToken
+  updateCurrentAccount: UpdateCurrentAccount
 }
 
 const Signup: React.FC<Props> = ({
   validation,
   addAccount,
-  saveAccessToken
+  updateCurrentAccount
 }: Props) => {
   const navigate = useNavigate()
   const [state, setState] = useState({
@@ -69,7 +69,7 @@ const Signup: React.FC<Props> = ({
         password: state.password,
         passwordConfirmation: state.passwordConfirmation
       })
-      await saveAccessToken.save(account.accessToken)
+      await updateCurrentAccount.save(account)
       navigate('/')
     } catch (error) {
       setState({ ...state, isLoading: false, errorMessage: error.message })
