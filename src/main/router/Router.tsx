@@ -5,7 +5,7 @@ import { MakeLogin } from '@/main/factories/pages/login/login-factory'
 import { MakeSignUp } from '@/main/factories/pages/signup/signup-factory'
 import { ApiContext } from '@/presentation/contexts'
 import { getCurrentAccountAdapter, setCurrentAccountAdapter } from '../adapters/current-account-adapter'
-import PrivateRoute from '@/presentation/components/PrivateRoute/PrivateRoute'
+import { PrivateRoute } from '@/presentation/components'
 
 const Router: React.FC = () => {
   return (
