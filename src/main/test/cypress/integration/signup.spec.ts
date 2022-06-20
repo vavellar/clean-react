@@ -83,7 +83,7 @@ describe('Signup - Component', () => {
       cy.getByTestId('spinner').should('not.exist')
       FormHelper.testUrl('/')
       cy.window().then((window) =>
-        assert.isOk(window.localStorage.getItem('currentAccount'))
+        assert.isOk(window.localStorage.getItem('account'))
       )
     })
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, RenderResult, waitFor } from "@testing-library/react"
+import { fireEvent, render, RenderResult } from "@testing-library/react"
 import Signup from "./Signup"
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
@@ -7,14 +7,15 @@ import {
   Helper,
   ValidationStub,
   AddAccountSpy,
-  UpdateCurrentAccountMock
 } from '@/presentation/test'
 import faker from 'faker'
+import { ApiContext } from '@/presentation/contexts'
+import { AccountModel } from '@/domain/models'
 
 type SutTypes = {
   sut: RenderResult
   addAccountSpy: AddAccountSpy
-  updateCurrentAccount: UpdateCurrentAccountMock
+  setCurrentAccountMock: (account: AccountModel) => void
 }
 
 type SutParams = {
@@ -27,16 +28,18 @@ const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
   validationStub.errorMessage = params?.validationError
   const addAccountSpy = new AddAccountSpy()
-  const updateCurrentAccount = new UpdateCurrentAccountMock()
+  const setCurrentAccountMock = jest.fn()
   const sut = render(
-    <Router location={history.location} navigator={history}>
-      <Signup validation={validationStub} addAccount={addAccountSpy} updateCurrentAccount={updateCurrentAccount}/>
-    </Router>
+    <ApiContext.Provider value={{ setCurrentAccount: setCurrentAccountMock }}>
+      <Router location={history.location} navigator={history}>
+        <Signup validation={validationStub} addAccount={addAccountSpy} />
+      </Router>
+    </ApiContext.Provider>
   )
   return {
     sut,
     addAccountSpy,
-    updateCurrentAccount
+    setCurrentAccountMock
   }
 }
 
@@ -161,17 +164,6 @@ describe('SignUp component', () => {
     fireEvent.submit(sut.getByTestId('form'))
     expect(addAccountSpy.callsCount).toBe(0)
   })
-
-  //  it('Should present error if Authentication fails', () => {
-  //    const { sut, addAccountSpy } = makeSut()
-  //    const error = new EmailInUseError()
-  //    jest.spyOn(addAccountSpy, 'add').mockRejectedValueOnce(error)
-  //    act(() => {
-  //      simulateValidSubmit(sut)
-  //    })
-  //    testElementText(sut, 'error-message', error.message)
-  //    Helper.testChildCount(sut, 'error-wrap', 1)
-  //  })
 
     // it('Should call SaveAccessToken on success and navigate to main page', async () => {
     //   const { sut, addAccountSpy, updateCurrentAccount } = makeSut()

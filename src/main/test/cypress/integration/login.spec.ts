@@ -62,7 +62,7 @@ describe('Login - Component', () => {
     cy.getByTestId('error-message').should('not.exist')
     cy.getByTestId('spinner').should('not.exist')
     cy.window().then((window) =>
-      assert.isOk(window.localStorage.getItem('currentAccount'))
+      assert.isOk(window.localStorage.getItem('account'))
     )
   })
 
