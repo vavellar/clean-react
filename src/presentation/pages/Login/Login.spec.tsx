@@ -54,8 +54,8 @@ describe('Login component', () => {
   it('Should start with inital state', () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
-    Helper.testChildCount('error-wrap', 0)
-    Helper.testButtonIsDisabled('submit', true)
+    expect(screen.getByTestId('error-wrap').children).toHaveLength(0)
+    expect(screen.getByTestId('submit')).toBeDisabled()
     Helper.testStatusForField('email', validationError)
     Helper.testStatusForField('password', validationError)
   })
@@ -97,7 +97,8 @@ describe('Login component', () => {
   it('Should show spinner on submit', () => {
     makeSut()
     simulateValidSubmit()
-    Helper.testElementExists('spinner')
+      expect(screen.queryByTestId('spinner')).toBeInTheDocument()
+
   })
 
   it('Should call Authentication with correct values', () => {

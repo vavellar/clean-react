@@ -58,8 +58,8 @@ describe('SignUp component', () => {
   it('Should start with inital state', () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
-    Helper.testChildCount('error-wrap', 0)
-    Helper.testButtonIsDisabled('submit', true)
+    expect(screen.getByTestId('error-wrap').children).toHaveLength(0)
+    expect(screen.getByTestId('submit')).toBeDisabled()
     Helper.testStatusForField('name', validationError)
     Helper.testStatusForField('email', validationError)
     Helper.testStatusForField('password', validationError)
@@ -124,13 +124,14 @@ describe('SignUp component', () => {
     Helper.populateField('email')
     Helper.populateField('password')
     Helper.populateField('passwordConfirmation')
-    Helper.testButtonIsDisabled('submit', false)
+    expect(screen.getByTestId('submit')).toBeEnabled()
   })
 
   it('Should show spinner on submit', () => {
     makeSut()
     simulateValidSubmit()
-    Helper.testElementExists('spinner')
+      expect(screen.queryByTestId('spinner')).toBeInTheDocument()
+
   })
 
   it('Should call AddAccount with correct values', () => {
